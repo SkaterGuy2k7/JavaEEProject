@@ -1,13 +1,13 @@
 package sheridan;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 /**
  * Servlet implementation class Regservlet
@@ -39,23 +39,31 @@ public class Regservlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+		PrintWriter out = response.getWriter();
 
-		try {
-			userbean user = new userbean();
-			user.setUserName(request.getParameter("id"));
-			user.setPassword(request.getParameter("pw"));
-			user = userDao.regist(user);
-			if (user.isValid()) {
-				HttpSession session = request.getSession(true);
-				session.setAttribute("currentuser", user);
-				response.sendRedirect("welcome.jsp");
-			} else {
-				System.out.println("sorry not inserted");
-				response.sendRedirect("Invalid.jsp");
-			}
-		} catch (Throwable theException) {
-			System.out.println(theException);
+		// LOOK FOR BUTTON CLICKED IN IF STATEMENT
+		if (request.getParameter("login") != null) {
+			out.println("login");
+		} else if (request.getParameter("register") != null) {
+			out.println("register");
 		}
+
+		// OLD CODE
+		// try {
+		// userbean user = new userbean();
+		// user.setUserName(request.getParameter("id"));
+		// user.setPassword(request.getParameter("pw"));
+		// user = userDao.regist(user);
+		// if (user.isValid()) {
+		// HttpSession session = request.getSession(true);
+		// session.setAttribute("currentuser", user);
+		// response.sendRedirect("welcome.jsp");
+		// } else {
+		// System.out.println("sorry not inserted");
+		// response.sendRedirect("Invalid.jsp");
+		// }
+		// } catch (Throwable theException) {
+		// System.out.println(theException);
+		// }
 	}
 }

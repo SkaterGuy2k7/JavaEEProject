@@ -5,23 +5,19 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>login</title>
+<title>Login</title>
 </head>
 <body>
-	<script type="text/javascript">function validateAndSubmit() {    var name = document.f1.id.value;  //first textbox document.formname.elementname.value    var name1=document.f1.pw.value;    /*if(f1.login[0].checked==false || f1.login[1].checked==false)    {        alert("select the login type");        return false;*/     if(name ==""  ||name == null ) {        alert("user id cannot be blank!!" );        return false;    }    else if(name1=="" ||name1==null)    {        alert("enter the password" );        return false;    }    document.f1.action ="Servlet";    document.f1.submit();    }</script>
-	<form name="f1">
-		<form action="Servlet" method="get">
-			<center>
-				<font color="253556">USERNAME</font><input type="text" name="id" /><font
-					color="253556">PASSWORD</font><input type="password" name="pw" />
-			</center>
+		<form action="Regservlet" method="post">
+			<div align="center">
+				<font color="253556">USERNAME</font><input type="text" name="user" /><font
+					color="253556">PASSWORD</font><input type="password" name="pass" />
+			</div>
 			<br>
-			<center>
-				<b><input type="submit" value="Submit"
-					onclick="javascript:validateAndSubmit();" /></b>
-			</center>
-			<br>
-			<a href="register.jsp">REGISTER HERE</a>
+			<div align="center">
+				<b><input type="submit" name="login" value="Login" /></b>
+					<b><input type="submit" name="register" value="Register"/></b>
+			</div>
 		</form>
 </body>
 </html>
