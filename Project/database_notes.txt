@@ -1,0 +1,34 @@
+Proffessor
+-profID
+-FirstName
+-LastName
+-Email
+-username
+-password
+
+StudxProf Combo
+-profId
+-StudID
+
+Student
+-StudID
+-FirstName
+-LastName
+-Email
+-username
+-password
+-Program
+-5 Course Columns Associated with Program
+	-Program should populate or determine courses
+Courses
+-CouseId
+-ProfID
+-pROGRAMID
+-CourseName
+-CourseCode
+-Time
+-Room
+
+Program
+-ProgID
+-Name

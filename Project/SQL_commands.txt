@@ -1,0 +1,58 @@
+SQL CREATE TABLES
+------------------
+
+CREATE TABLE Professor (
+profID INT NOT NULL PRIMARY KEY
+	GENERATED ALWAYS AS IDENTITY
+	(START WITH 1, INCREMENT BY 1),
+firstName varchar(50),
+lastName varchar(50),
+email varchar(50),
+username varchar(50),
+password varchar(50)
+)
+
+CREATE TABLE  Student(
+studId INT NOT NULL PRIMARY KEY
+		GENERATED ALWAYS AS IDENTITY
+        (START WITH 1, INCREMENT BY 1),
+firstName varchar(50),
+lastName varchar(50),
+email varchar(50),
+username varchar(50),
+password varchar(50),
+program varchar(50),
+course1 varchar(50),
+course2 varchar(50),
+course3 varchar(50),
+course4 varchar(50),
+course5 varchar(50)
+)
+
+CREATE TABLE  Course(
+courseId INT NOT NULL PRIMARY KEY
+		GENERATED ALWAYS AS IDENTITY
+        (START WITH 1, INCREMENT BY 1),
+profId INT NOT NULL,
+progId INT NOT NULL,
+courseName varchar(50),
+courseCode varchar(50),
+courseTime varchar(50),
+roomNum varchar(50),
+FOREIGN KEY (profId) REFERENCES Professor(profId),
+FOREIGN KEY (progId) REFERENCES Program(progId)
+)
+
+CREATE TABLE  Program(
+progId INT NOT NULL PRIMARY KEY
+		GENERATED ALWAYS AS IDENTITY
+        (START WITH 1, INCREMENT BY 1),
+progName varchar(50)
+)
+
+CREATE TABLE STUDtoPROG(
+profId INT NOT NULL,
+studId INT NOT NULL,
+FOREIGN KEY (profId) REFERENCES Professor(profId),
+FOREIGN KEY (studId) REFERENCES Student(studId)
+)
