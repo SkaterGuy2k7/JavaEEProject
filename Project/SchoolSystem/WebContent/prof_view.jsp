@@ -5,21 +5,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
-<title>Create Student</title>
+<title>Professor View</title>
+
 </head>
 <body>
-First Name:<input type="text" name="firstName" /><br/>
-Last Name:<input type="text" name="lastName" /><br/>
-Email:<input type="text" name="email" /><br/>
-Username:<input type="text" name="user" /><br/>
-Password:<input type="password" name="pass" /><br/>
-Program:<select name="program">
-<option>Select a program...</option>
-<option>Computer Programmer</option>
-<option>Animal Care</option>
-</select><br/>
+Name:<br/>
+ID:<br/>
 <u>Courses</u><br/>
-
-
+<a href="#" onclick="display();">fuck</a>
+<div id="test" class="grade">shit and piss</div>
 </body>
 </html>

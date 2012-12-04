@@ -45,7 +45,7 @@ public class Regservlet extends HttpServlet {
 		if (request.getParameter("login") != null) {
 			out.println("login");
 		} else if (request.getParameter("register") != null) {
-			out.println("register");
+			response.sendRedirect("createStud.jsp");
 		}
 
 		// OLD CODE
