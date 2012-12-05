@@ -21,12 +21,13 @@ lastName varchar(50),
 email varchar(50),
 username varchar(50),
 password varchar(50),
-program varchar(50),
+progId INT NOT NULL,
 course1 varchar(50),
 course2 varchar(50),
 course3 varchar(50),
 course4 varchar(50),
-course5 varchar(50)
+course5 varchar(50),
+FOREIGN KEY (progId) REFERENCES Program(progId)
 )
 
 CREATE TABLE  Course(
