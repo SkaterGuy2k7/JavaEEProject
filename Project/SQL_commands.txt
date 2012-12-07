@@ -10,7 +10,13 @@ lastName varchar(50),
 email varchar(50),
 username varchar(50),
 password varchar(50)
-)
+);
+CREATE TABLE  Program(
+progId INT NOT NULL PRIMARY KEY
+		GENERATED ALWAYS AS IDENTITY
+        (START WITH 1, INCREMENT BY 1),
+progName varchar(50)
+);
 
 CREATE TABLE  Student(
 studId INT NOT NULL PRIMARY KEY
@@ -23,7 +29,7 @@ username varchar(50),
 password varchar(50),
 progId INT NOT NULL,
 FOREIGN KEY (progId) REFERENCES Program(progId)
-)
+);
 
 CREATE TABLE  Course(
 courseId INT NOT NULL PRIMARY KEY
@@ -37,14 +43,7 @@ courseTime varchar(50),
 roomNum varchar(50),
 FOREIGN KEY (profId) REFERENCES Professor(profId),
 FOREIGN KEY (progId) REFERENCES Program(progId)
-)
-
-CREATE TABLE  Program(
-progId INT NOT NULL PRIMARY KEY
-		GENERATED ALWAYS AS IDENTITY
-        (START WITH 1, INCREMENT BY 1),
-progName varchar(50)
-)
+);
 
 CREATE TABLE Material (
 matId INT NOT NULL PRIMARY KEY
@@ -58,4 +57,4 @@ studId INT NOT NULL,
 grade REAL,
 FOREIGN KEY (courseId) REFERENCES Course(courseId),
 FOREIGN KEY (studId) REFERENCES Student(studId)
-)
+);
