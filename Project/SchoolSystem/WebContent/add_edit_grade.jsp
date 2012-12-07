@@ -9,17 +9,16 @@
 <script>
 
 function fillMats(){
-	document.location.href = "http://localhost:8080/SchoolSystem/Regservlet?method=addGrade_fillMats";
+		document.location.href = "http://localhost:8080/SchoolSystem/Regservlet?method=addGrade_fillMats";
 }
 </script>
 </head>
 <body>
 <u>Add of Edit a Grade</u><br/><br/>
-<select name="courses" onchange="fillMats()">
+		<select name="courses" onchange="fillMats()">
 		<option>Select a course...</option>
 		<%
 		ArrayList<Course> courses = (ArrayList<Course>) session.getAttribute("courses");
-		
 		if(null != courses)
 		{
 			for(Course c: courses)
@@ -27,8 +26,9 @@ function fillMats(){
 				out.println("<option>"+c.getCourseName()+"</option>");
 			}
 		}
+		out.println("</select><br/>");
 		%>
-</select><br/>
+</select>
 <select name="materials" onchange="">
 		
 </select>

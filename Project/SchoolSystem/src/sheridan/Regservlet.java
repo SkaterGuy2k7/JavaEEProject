@@ -45,7 +45,8 @@ public class Regservlet extends HttpServlet {
 
 		if (null != method) {
 			if (method.equals("addGrade_fillMats")) {
-
+				String courseName = request.getParameter("courses");
+				out.println(courseName);
 			}
 		}
 	}
