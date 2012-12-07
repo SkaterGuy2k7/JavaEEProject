@@ -8,6 +8,7 @@ public class Course {
 	private String couseCode;
 	private String courseTime;
 	private String roomNum;
+	private String profName;
 
 	public int getCourseId() {
 		return courseId;
@@ -63,5 +64,13 @@ public class Course {
 
 	public void setRoomNum(String roomNum) {
 		this.roomNum = roomNum;
+	}
+
+	public String getProfName() {
+		return profName;
+	}
+
+	public void setProfName(String profName) {
+		this.profName = profName;
 	}
 }
