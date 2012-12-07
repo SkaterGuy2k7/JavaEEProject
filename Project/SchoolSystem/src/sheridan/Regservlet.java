@@ -51,11 +51,15 @@ public class Regservlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
-		PrintWriter out = response.getWriter();
-
+		PrintWriter out = response.getWriter();			
+		
 		// LOOK FOR BUTTON CLICKED IN IF STATEMENT
 		// LOGIN BUTTON
 		if (request.getParameter("login") != null) {
+			ArrayList<Course> courses = new ArrayList<Course>();
+			ArrayList<Material> materials = new ArrayList<Material>();
+			Student s = new Student();
+			Professor p = new Professor();
 			session.setAttribute("user", null);
 			String user = request.getParameter("user");
 			String pass = request.getParameter("pass");
@@ -76,16 +80,90 @@ public class Regservlet extends HttpServlet {
 				// STAYS UNTIL LOGOUT
 				studrs = studStatement.executeQuery(sql);
 				if (studrs.next()) {
-					// STUDENT LOGGED IN
-					// out.println("Its a student");
+					s.setStudid(studrs.getInt("studid"));
+					s.setFirstName(studrs.getString("firstname"));
+					s.setLastName(studrs.getString("lastname"));
+					s.setEmail(studrs.getString("email"));
+					s.setUser(studrs.getString("username"));
+					s.setPass(studrs.getString("password"));
+					s.setProgId(studrs.getInt("progId"));					
+					
+					session.setAttribute("student", s);
+					
+					sql = "SELECT * FROM Course WHERE progId=" + s.getProgId();
+					
+					studrs = studStatement.executeQuery(sql);
+					
+					courses = new ArrayList<Course>();
+					while(studrs.next()){
+						Course c = new Course();
+						
+						c.setCourseId(studrs.getInt("courseId"));
+						c.setProgId(studrs.getInt("progId"));
+						c.setProfId(studrs.getInt("profId"));
+						c.setCourseName(studrs.getString("courseName"));
+						c.setCourseTime(studrs.getString("courseTime"));
+						c.setCouseCode(studrs.getString("courseCode"));
+						c.setRoomNum(studrs.getString("roomnum"));
+						
+						courses.add(c);
+					}
+					
+					session.setAttribute("courses", courses);
+					response.sendRedirect("http://localhost:8080/SchoolSystem/stud_view.jsp");
 					response.sendRedirect("stud_view.jsp");
 				} else {
 					sql = "SELECT * FROM Professor WHERE username='" + user
 							+ "' AND password='" + pass + "'";
 					profrs = profStatement.executeQuery(sql);
-					if (profrs.next()) {
-						// PROFESSOR LOGGED IN
-						// out.println("Its a professr");
+					if (profrs.next()) {						
+						p.setId(profrs.getInt("profid"));
+						p.setFirstName(profrs.getString("firstname"));
+						p.setLastName(profrs.getString("lastname"));
+						p.setEmail(profrs.getString("email"));
+						p.setUser(profrs.getString("username"));
+						p.setPass(profrs.getString("password"));
+							
+						session.setAttribute("professor", p);
+							
+						sql = "SELECT * FROM Course WHERE profId=" + p.getId();
+							
+						profrs = profStatement.executeQuery(sql);						
+																	
+						while(profrs.next()){
+							Course c = new Course();
+								
+							c.setCourseId(profrs.getInt("courseId"));
+							c.setProgId(profrs.getInt("progId"));
+							c.setProfId(profrs.getInt("profId"));
+							c.setCourseName(profrs.getString("courseName"));
+							c.setCourseTime(profrs.getString("courseTime"));
+							c.setCouseCode(profrs.getString("courseCode"));
+							c.setRoomNum(profrs.getString("roomnum"));
+								
+							courses.add(c);						
+						}
+						profrs.close();
+						
+						sql = "SELECT * FROM Material";
+							
+						profrs = profStatement.executeQuery(sql);
+								
+						while(profrs.next()){
+							Material m = new Material();
+								
+							m.setCourseId(profrs.getInt("courseId"));
+							m.setMatId(profrs.getInt("matId"));
+							m.setStudId(profrs.getInt("studId"));
+							m.setGrade(profrs.getString("grade"));
+							m.setMatName(profrs.getString("matName"));
+							m.setMatType(profrs.getString("matType"));
+							m.setMatWeight(profrs.getString("matWeight"));
+								
+							materials.add(m);
+						}
+						session.setAttribute("materials", materials);
+						session.setAttribute("courses", courses);							
 						response.sendRedirect("prof_view.jsp");
 					} else {
 						// POP UP MESSAGE TELLING THE USER LOGIN INFORMATION WAS

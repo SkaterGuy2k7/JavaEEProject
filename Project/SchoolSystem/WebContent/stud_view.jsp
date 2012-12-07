@@ -15,59 +15,35 @@
 		document.getElementById('course4').style.display = 'none';
 		document.getElementById('course5').style.display = 'none';
 	}
-	function display2() {
-		document.getElementById('course1').style.display = 'none';
-		document.getElementById('course2').style.display = 'block';	
-		document.getElementById('course3').style.display = 'none';
-		document.getElementById('course4').style.display = 'none';
-		document.getElementById('course5').style.display = 'none';
-	}
-	function display3() {
-		document.getElementById('course1').style.display = 'none';
-		document.getElementById('course2').style.display = 'none';
-		document.getElementById('course3').style.display = 'block';	
-		document.getElementById('course4').style.display = 'none';
-		document.getElementById('course5').style.display = 'none';
-	}
-	function display4() {
-		document.getElementById('course1').style.display = 'none';
-		document.getElementById('course2').style.display = 'none';
-		document.getElementById('course3').style.display = 'none';	
-		document.getElementById('course4').style.display = 'block';
-		document.getElementById('course5').style.display = 'none';	
-	}
-	function display5() {
-		document.getElementById('course1').style.display = 'none';
-		document.getElementById('course2').style.display = 'none';
-		document.getElementById('course3').style.display = 'none';	
-		document.getElementById('course4').style.display = 'none';	
-		document.getElementById('course5').style.display = 'block';
-	}
 </script>
 </head>
 <body>
 	<span class="student">Name: ${student.getFirstName()} ${s.getLastName()}</span><br/>
 	<span class="student">ID: ${student.getStudid()}</span><br/>
 	<u>Courses</u>
-	<div>				
-		<a href=# onclick='display1();'>${student.getCourse1()}</a>
-	</div>
-	<div id="course1" class="grade">78</div>
-	<div>				
-		<a href=# onclick='display2();'>${student.getCourse2()}</a>
-	</div>
-	<div id="course2" class="grade">60</div>
-	<div>				
-		<a href=# onclick='display3();'>${student.getCourse3()}</a>
-	</div>
-	<div id="course3" class="grade">90</div>
-	<div>				
-		<a href=# onclick='display4();'>${student.getCourse4()}</a>
-	</div>
-	<div id="course4" class="grade">80</div>
-	<div>				
-		<a href=# onclick='display5();'>${student.getCourse5()}</a>
-	</div>
-	<div id="course5" class="grade">52</div>
+	<form action='RegServlet' method='post'>
+	<%
+		ArrayList<Course> courseList = (ArrayList<Course>) session.getAttribute("courses");
+		ArrayList<Material> matList = (ArrayList<Material>) session.getAttribute("materials");		
+		
+		if (null != courseList) {
+			for (Course c : courseList) {				
+				out.println("<div><a href='#' onclick=\"display('course"+c.getCourseId()+"')\">"+c.getCourseId()+"</a>&nbsp;");
+				out.println(""+c.getCourseName()+"&nbsp;");
+				out.println(""+c.getCourseTime()+"&nbsp;");
+				out.println(""+c.getRoomNum()+"&nbsp;</div>");
+				if (null != matList) {					
+					for (Material m : matList) {
+						double gradePercentage = Double.valueOf(m.getGrade()) / Double.valueOf(m.getMatWeight()) *100;
+						out.println("<div name=\"material\" id='course"+c.getCourseId()+">Type: "+m.getMatType()+"&nbsp");
+						out.println("Grade: "+gradePercentage+"%</div>");												
+					}
+				}				
+			}
+		}
+	%>		
+	<br />
+	<input type='submit' name='addGrade' value='Add/Edit Grade'/>
+	</form>
 </body>
 </html>
