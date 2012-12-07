@@ -22,11 +22,6 @@ email varchar(50),
 username varchar(50),
 password varchar(50),
 progId INT NOT NULL,
-course1 varchar(50),
-course2 varchar(50),
-course3 varchar(50),
-course4 varchar(50),
-course5 varchar(50),
 FOREIGN KEY (progId) REFERENCES Program(progId)
 )
 
@@ -51,9 +46,16 @@ progId INT NOT NULL PRIMARY KEY
 progName varchar(50)
 )
 
-CREATE TABLE STUDtoPROG(
-profId INT NOT NULL,
+CREATE TABLE Material (
+matId INT NOT NULL PRIMARY KEY
+		GENERATED ALWAYS AS IDENTITY
+        (START WITH 1, INCREMENT BY 1),
+matType varchar(50),
+matName varchar(50),
+matWeight varchar(50),
+courseId INT NOT NULL,
 studId INT NOT NULL,
-FOREIGN KEY (profId) REFERENCES Professor(profId),
+grade REAL,
+FOREIGN KEY (courseId) REFERENCES Course(courseId),
 FOREIGN KEY (studId) REFERENCES Student(studId)
 )
