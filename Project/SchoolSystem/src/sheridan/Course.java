@@ -5,7 +5,7 @@ public class Course {
 	private int profId;
 	private int progId;
 	private String courseName;
-	private String couseCode;
+	private String courseCode;
 	private String courseTime;
 	private String roomNum;
 	private String profName;
@@ -42,12 +42,12 @@ public class Course {
 		this.courseName = courseName;
 	}
 
-	public String getCouseCode() {
-		return couseCode;
+	public String getCourseCode() {
+		return courseCode;
 	}
 
-	public void setCouseCode(String couseCode) {
-		this.couseCode = couseCode;
+	public void setCourseCode(String courseCode) {
+		this.courseCode = courseCode;
 	}
 
 	public String getCourseTime() {

@@ -51,11 +51,13 @@ public class Regservlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
-		PrintWriter out = response.getWriter();			
-		
+		PrintWriter out = response.getWriter();
+
 		// LOOK FOR BUTTON CLICKED IN IF STATEMENT
 		// LOGIN BUTTON
 		if (request.getParameter("login") != null) {
+			// clear the materials attribute
+			session.setAttribute("materials", null);
 			ArrayList<Course> courses = new ArrayList<Course>();
 			ArrayList<Material> materials = new ArrayList<Material>();
 			Student s = new Student();
@@ -76,9 +78,8 @@ public class Regservlet extends HttpServlet {
 				String sql = "SELECT * FROM Student WHERE username='" + user
 						+ "' AND password='" + pass + "'";
 
-				// LOGGING IN WILL SET A SESSION ATTRIBUTE CALLED user THAT
-				// STAYS UNTIL LOGOUT
 				studrs = studStatement.executeQuery(sql);
+				// STUDENT LOGIN
 				if (studrs.next()) {
 					s.setStudid(studrs.getInt("studid"));
 					s.setFirstName(studrs.getString("firstname"));
@@ -86,72 +87,106 @@ public class Regservlet extends HttpServlet {
 					s.setEmail(studrs.getString("email"));
 					s.setUser(studrs.getString("username"));
 					s.setPass(studrs.getString("password"));
-					s.setProgId(studrs.getInt("progId"));					
-					
+					s.setProgId(studrs.getInt("progId"));
+
 					session.setAttribute("student", s);
-					
+
+					// ADDING COURSES TO stud_view
 					sql = "SELECT * FROM Course WHERE progId=" + s.getProgId();
-					
+
 					studrs = studStatement.executeQuery(sql);
-					
+
 					courses = new ArrayList<Course>();
-					while(studrs.next()){
+					while (studrs.next()) {
 						Course c = new Course();
-						
+
 						c.setCourseId(studrs.getInt("courseId"));
 						c.setProgId(studrs.getInt("progId"));
 						c.setProfId(studrs.getInt("profId"));
 						c.setCourseName(studrs.getString("courseName"));
 						c.setCourseTime(studrs.getString("courseTime"));
-						c.setCouseCode(studrs.getString("courseCode"));
+						c.setCourseCode(studrs.getString("courseCode"));
 						c.setRoomNum(studrs.getString("roomnum"));
-						
+						int profId = studrs.getInt("profId");
+						sql = "SELECT profId, firstName, lastName FROM Professor WHERE profId="
+								+ studrs.getInt("profId");
+						profrs = profStatement.executeQuery(sql);
+						while (profrs.next()) {
+							if (profId == profrs.getInt("profId")) {
+								c.setProfName(profrs.getString("firstName")
+										+ " " + profrs.getString("lastName"));
+							}
+						}
+
 						courses.add(c);
 					}
-					
+
 					session.setAttribute("courses", courses);
-					response.sendRedirect("http://localhost:8080/SchoolSystem/stud_view.jsp");
+					// END ADDING COURSES TO stud_view
+
+					// ADD MATERIALS OF COURSES TO stud_view
+					sql = "SELECT * FROM Material";
+
+					studrs = profStatement.executeQuery(sql);
+
+					while (studrs.next()) {
+						Material m = new Material();
+
+						m.setCourseId(studrs.getInt("courseId"));
+						m.setMatId(studrs.getInt("matId"));
+						m.setStudId(studrs.getInt("studId"));
+						m.setGrade(studrs.getString("grade"));
+						m.setMatName(studrs.getString("matName"));
+						m.setMatType(studrs.getString("matType"));
+						m.setMatWeight(studrs.getString("matWeight"));
+
+						materials.add(m);
+					}
+					session.setAttribute("materials", materials);
+					// END ADDING MATERIAL TO stud_view
+
 					response.sendRedirect("stud_view.jsp");
+					// PROFESSOR LOGIN
 				} else {
 					sql = "SELECT * FROM Professor WHERE username='" + user
 							+ "' AND password='" + pass + "'";
 					profrs = profStatement.executeQuery(sql);
-					if (profrs.next()) {						
+					if (profrs.next()) {
 						p.setId(profrs.getInt("profid"));
 						p.setFirstName(profrs.getString("firstname"));
 						p.setLastName(profrs.getString("lastname"));
 						p.setEmail(profrs.getString("email"));
 						p.setUser(profrs.getString("username"));
 						p.setPass(profrs.getString("password"));
-							
+
 						session.setAttribute("professor", p);
-							
+
 						sql = "SELECT * FROM Course WHERE profId=" + p.getId();
-							
-						profrs = profStatement.executeQuery(sql);						
-																	
-						while(profrs.next()){
+
+						profrs = profStatement.executeQuery(sql);
+
+						while (profrs.next()) {
 							Course c = new Course();
-								
+
 							c.setCourseId(profrs.getInt("courseId"));
 							c.setProgId(profrs.getInt("progId"));
 							c.setProfId(profrs.getInt("profId"));
 							c.setCourseName(profrs.getString("courseName"));
 							c.setCourseTime(profrs.getString("courseTime"));
-							c.setCouseCode(profrs.getString("courseCode"));
+							c.setCourseCode(profrs.getString("courseCode"));
 							c.setRoomNum(profrs.getString("roomnum"));
-								
-							courses.add(c);						
+
+							courses.add(c);
 						}
 						profrs.close();
-						
+
 						sql = "SELECT * FROM Material";
-							
+
 						profrs = profStatement.executeQuery(sql);
-								
-						while(profrs.next()){
+
+						while (profrs.next()) {
 							Material m = new Material();
-								
+
 							m.setCourseId(profrs.getInt("courseId"));
 							m.setMatId(profrs.getInt("matId"));
 							m.setStudId(profrs.getInt("studId"));
@@ -159,12 +194,13 @@ public class Regservlet extends HttpServlet {
 							m.setMatName(profrs.getString("matName"));
 							m.setMatType(profrs.getString("matType"));
 							m.setMatWeight(profrs.getString("matWeight"));
-								
+
 							materials.add(m);
 						}
 						session.setAttribute("materials", materials);
-						session.setAttribute("courses", courses);							
+						session.setAttribute("courses", courses);
 						response.sendRedirect("prof_view.jsp");
+						// FAILED LOGIN
 					} else {
 						// POP UP MESSAGE TELLING THE USER LOGIN INFORMATION WAS
 						// INCORRECT
@@ -325,7 +361,7 @@ public class Regservlet extends HttpServlet {
 					c.setProfId(rs.getInt("profId"));
 					c.setProgId(progId);
 					c.setCourseName(rs.getString("courseName"));
-					c.setCouseCode(rs.getString("courseCode"));
+					c.setCourseCode(rs.getString("courseCode"));
 					c.setCourseTime(rs.getString("courseTime"));
 					c.setRoomNum(rs.getString("roomNum"));
 					int profId = rs.getInt("profId");
