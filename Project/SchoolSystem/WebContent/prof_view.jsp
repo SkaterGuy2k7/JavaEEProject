@@ -12,7 +12,6 @@
 Name:<br/>
 ID:<br/>
 <u>Courses</u><br/>
-<a href="#" onclick="display();">fuck</a>
-<div id="test" class="grade">shit and piss</div>
+
 </body>
 </html>
