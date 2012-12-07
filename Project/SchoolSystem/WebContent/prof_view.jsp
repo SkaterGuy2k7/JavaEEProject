@@ -7,9 +7,10 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
 <title>Professor View</title>
 <script>
-	function display(courseName) {					
+	function display(courseId) {		
+		alert("Hello");		
 		document.getElementByName("material").style.display = 'none';
-		document.getElementById(courseName).style.display = 'block';		
+		document.getElementById(courseId).style.display = 'block';		
 	}
 </script>
 </head>
@@ -25,29 +26,31 @@
 			<th>Course Time</th>
 			<th>Room Number</th>
 		</tr>
-	</table>	
-	<form action='RegServlet' method='post'>
+	</table>
+	<div value=""></div>	
+	<form action="RegServlet" method="post">
 	<%
 		ArrayList<Course> courseList = (ArrayList<Course>) session.getAttribute("courses");
 		ArrayList<Material> matList = (ArrayList<Material>) session.getAttribute("materials");		
 		
 		if (null != courseList) {
 			for (Course c : courseList) {				
-				out.println("<div><a href='#' onclick=\"display('course"+c.getCourseId()+"')\">"+c.getCourseId()+"</a>&nbsp;");
+				out.println("<div><a href='#' onclick=\"display('"+c.getCourseId()+"')\">"+c.getCourseId()+"</a>&nbsp;");
 				out.println(""+c.getCourseName()+"&nbsp;");
 				out.println(""+c.getCourseTime()+"&nbsp;");
 				out.println(""+c.getRoomNum()+"&nbsp;</div>");
 				if (null != matList) {					
 					for (Material m : matList) {
-						out.println("<div name=\"material\" id='course"+c.getCourseId()+">Type: "+m.getMatType()+"&nbsp");
-						out.println("Weight: "+m.getMatWeight()+"</div>");												
+						out.println("<div name=\"material\">Type: "+m.getMatType()+"&nbsp");
+						out.println("Weight: "+m.getMatWeight()+"</div>");
+						out.println("<input type='hidden' name='matCourseName' value='"+c.getCourseName()+"'/>");						
 					}
+					out.println("<input type='submit' name=\"materialPage\" value='Add/Edit Material'/>");
+					out.println("<input type='submit' name=\"addWeight\" value='Add/Edit Weight'/>");
 				}				
 			}
 		}
-	%>	
-	<input type='submit' name='materialPage' value='Add/Edit Material'/>
-	<input type='submit' name='addWeight' value='Add/Edit Weight'/>
+	%>		
 	</form>
 </body>
 

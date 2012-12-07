@@ -228,7 +228,11 @@ public class Regservlet extends HttpServlet {
 		} else if (request.getParameter("register") != null) {
 			session.setAttribute("stud", null);
 			response.sendRedirect("createStud.jsp");
-		} else if (request.getParameter("createStud") != null) {
+		} else if (request.getParameter("materialPage") != null) {
+			String courseName = request.getParameter("matCourseName");
+			System.out.println("Course: " + courseName);
+			response.sendRedirect("add_edit_material.jsp");
+		}else if (request.getParameter("createStud") != null) {
 			// VALIDATION FOR STUDENT INFO
 			session.setAttribute("errors", null);
 			Map<String, String> errors = new HashMap<String, String>(6);

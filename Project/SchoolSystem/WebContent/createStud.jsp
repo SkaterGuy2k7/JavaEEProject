@@ -44,7 +44,7 @@
 		{
 			for(Course c : courses)
 			{
-				out.println(c.getCouseCode()+" - "+c.getCourseName()+" - "+c.getProfName()+"<br/>");
+				out.println(c.getCourseCode()+" - "+c.getCourseName()+" - "+c.getProfName()+"<br/>");
 			}
 		}
 	%>
