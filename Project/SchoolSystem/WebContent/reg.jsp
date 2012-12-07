@@ -18,6 +18,9 @@
 				<b><input type="submit" name="login" value="Login" /></b>
 					<b><input type="submit" name="register" value="Register Student"/></b>
 			</div>
+			<div align="center">
+				<span class="error">${error}</span>
+			</div>
 		</form>
 </body>
 </html>

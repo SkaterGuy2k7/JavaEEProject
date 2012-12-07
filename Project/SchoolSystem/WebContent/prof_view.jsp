@@ -6,12 +6,11 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
 <title>Professor View</title>
-
 </head>
 <body>
-Name:<br/>
-ID:<br/>
-<u>Courses</u><br/>
-
+	<span class="prof">Name: ${professor.getFirstName()} ${professor.getLastName()}</span><br/>
+	<span class="prof">ID: ${professor.getId()}</span><br/>
+	<u>Courses</u>
 </body>
+
 </html>

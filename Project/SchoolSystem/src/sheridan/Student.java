@@ -4,7 +4,7 @@ public class Student {
 	private int studid;
 	private String firstName;
 	private String lastName;
-	private String emial;
+	private String email;
 	private String user;
 	private String pass;
 	private int progId;
@@ -38,12 +38,12 @@ public class Student {
 		this.lastName = lastName;
 	}
 
-	public String getEmial() {
-		return emial;
+	public String getEmail() {
+		return email;
 	}
 
-	public void setEmial(String emial) {
-		this.emial = emial;
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public String getUser() {
