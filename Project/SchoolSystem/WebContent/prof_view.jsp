@@ -28,7 +28,7 @@
 		</tr>
 	</table>
 	<div value=""></div>	
-	<form action="RegServlet" method="post">
+	<form action="Regservlet" method="post">
 	<%
 		ArrayList<Course> courseList = (ArrayList<Course>) session.getAttribute("courses");
 		ArrayList<Material> matList = (ArrayList<Material>) session.getAttribute("materials");		
@@ -45,8 +45,8 @@
 						out.println("Weight: "+m.getMatWeight()+"</div>");
 						out.println("<input type='hidden' name='matCourseName' value='"+c.getCourseName()+"'/>");						
 					}
-					out.println("<input type='submit' name=\"materialPage\" value='Add/Edit Material'/>");
-					out.println("<input type='submit' name=\"addWeight\" value='Add/Edit Weight'/>");
+					out.println("<input type='submit' name='materialPage' value='Add/Edit Material'/>");
+					out.println("<input type='submit' name='addWeight' value='Add/Edit Weight'/>");
 				}				
 			}
 		}

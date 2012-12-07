@@ -20,10 +20,10 @@
 </script>
 </head>
 <body>
-	Name: ${student.getFirstName()} ${s.getLastName()} <br/>
+	Name: ${student.getFirstName()} ${student.getLastName()} <br/>
 	ID: ${student.getStudid()}<br/>
 	<u>Courses</u>
-	<form action='RegServlet' method='post'>
+	<form action='Regservlet' method='post'>
 	<%
 		ArrayList<Course> courseList = (ArrayList<Course>) session.getAttribute("courses");
 		ArrayList<Material> matList = (ArrayList<Material>) session.getAttribute("materials");		
@@ -40,17 +40,16 @@
 						{
 							//double gradePercentage = Double.valueOf(m.getGrade()) / Double.valueOf(m.getMatWeight()) *100;
 							
-							out.print("Type: "+m.getMatType()+" - "+m.getMatName()+"<br/>");
+							out.print("Type: "+m.getMatType()+" - "+m.getMatName()+" - ");
 							if(null != m.getGrade()){
-								out.println("Grade: "+m.getGrade()+"</div>");	
+								out.println(m.getGrade()+"/"+m.getMatWeight()+"<br/>");	
 							} else {
-								
+								out.println("<br/>");
 							}
 							
 						}						
 					}
-				}		
-				System.out.println("boomkin");
+				}
 				//end material div
 				out.println("</div>");
 				//end course div

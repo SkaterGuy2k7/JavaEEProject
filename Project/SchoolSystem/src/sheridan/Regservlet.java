@@ -41,7 +41,13 @@ public class Regservlet extends HttpServlet {
 			HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
 		PrintWriter out = response.getWriter();
+		String method = request.getParameter("method");
 
+		if (null != method) {
+			if (method.equals("addGrade_fillMats")) {
+
+			}
+		}
 	}
 
 	/**
@@ -232,7 +238,11 @@ public class Regservlet extends HttpServlet {
 			String courseName = request.getParameter("matCourseName");
 			System.out.println("Course: " + courseName);
 			response.sendRedirect("add_edit_material.jsp");
-		}else if (request.getParameter("createStud") != null) {
+
+		} else if (request.getParameter("addGrade") != null) {
+			// SEND TO add_edit_grade.jsp
+			response.sendRedirect("add_edit_grade.jsp");
+		} else if (request.getParameter("createStud") != null) {
 			// VALIDATION FOR STUDENT INFO
 			session.setAttribute("errors", null);
 			Map<String, String> errors = new HashMap<String, String>(6);
