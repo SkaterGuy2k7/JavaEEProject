@@ -6,24 +6,22 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
 <title>Add/Edit Grade</title>
-<script>
-
-function fillMats(){
-		document.location.href = "http://localhost:8080/SchoolSystem/Regservlet?method=addGrade_fillMats";
-}
-</script>
 </head>
 <body>
 <u>Add of Edit a Grade</u><br/><br/>
-		<select name="courses" onchange="fillMats()">
+<form name="gradeForm" action="Regservlet" method="post">
+<input type="hidden" name="nameOfForm" value="gradeForm" />
+		<select name="courses" onchange="document.gradeForm.submit()	">
 		<option>Select a course...</option>
 		<%
 		ArrayList<Course> courses = (ArrayList<Course>) session.getAttribute("courses");
 		if(null != courses)
 		{
+			int i = 1;
 			for(Course c: courses)
 			{
 				out.println("<option>"+c.getCourseName()+"</option>");
+				i++;
 			}
 		}
 		out.println("</select><br/>");
@@ -32,5 +30,6 @@ function fillMats(){
 <select name="materials" onchange="">
 		
 </select>
+</form>
 </body>
 </html>

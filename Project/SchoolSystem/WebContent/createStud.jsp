@@ -11,6 +11,7 @@
 </head>
 <body>
 <form name="studForm" action="Regservlet" method="post">
+<input type="hidden" name="nameOfForm" value="studForm" />
 	First Name:
 	<input type="text" name="firstName"  value="${stud.getFirstName()}"/>
 	<span class="error">${errors.firstNError}</span>

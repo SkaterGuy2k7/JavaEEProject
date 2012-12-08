@@ -41,14 +41,7 @@ public class Regservlet extends HttpServlet {
 			HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
 		PrintWriter out = response.getWriter();
-		String method = request.getParameter("method");
 
-		if (null != method) {
-			if (method.equals("addGrade_fillMats")) {
-				String courseName = request.getParameter("courses");
-				out.println(courseName);
-			}
-		}
 	}
 
 	/**
@@ -348,72 +341,131 @@ public class Regservlet extends HttpServlet {
 		} else {
 			// COMES FROM createStud.jsp onchange select tag
 			session.setAttribute("courses", null);
+			String nameOfForm = request.getParameter("nameOfForm");
 
-			try {
-				String progName = request.getParameter("programs");
-				int progId = Integer.parseInt(progName.substring(0, 1));
+			if (nameOfForm.equals("studForm")) {
+				try {
+					String progName = request.getParameter("programs");
+					int progId = Integer.parseInt(progName.substring(0, 1));
 
-				clearProgDropAttributes(request);
-				// INSTEAD OF LINE BELOW USE A METHOD TO CLEAR ALL prog+progid
-				// ATTRIBUTES
-				// session.setAttribute("prog" + progId, null);
+					clearProgDropAttributes(request);
+					// INSTEAD OF LINE BELOW USE A METHOD TO CLEAR ALL
+					// prog+progid
+					// ATTRIBUTES
+					// session.setAttribute("prog" + progId, null);
 
-				String connectionURL = "jdbc:derby://localhost:1527/student;create=true";
-				Connection conn = null;
-				ResultSet rs;
-				conn = DriverManager.getConnection(connectionURL);
-				Statement statement = conn.createStatement();
-				Statement profStatement = conn.createStatement();
+					String connectionURL = "jdbc:derby://localhost:1527/student;create=true";
+					Connection conn = null;
+					ResultSet rs;
+					conn = DriverManager.getConnection(connectionURL);
+					Statement statement = conn.createStatement();
+					Statement profStatement = conn.createStatement();
 
-				String sql = "SELECT * FROM Course WHERE progId=" + progId;
-				rs = statement.executeQuery(sql);
+					String sql = "SELECT * FROM Course WHERE progId=" + progId;
+					rs = statement.executeQuery(sql);
 
-				ArrayList<Course> courses = new ArrayList<Course>();
+					ArrayList<Course> courses = new ArrayList<Course>();
 
-				while (rs.next()) {
-					Course c = new Course();
-					c.setCourseId(rs.getInt("courseId"));
-					c.setProfId(rs.getInt("profId"));
-					c.setProgId(progId);
-					c.setCourseName(rs.getString("courseName"));
-					c.setCourseCode(rs.getString("courseCode"));
-					c.setCourseTime(rs.getString("courseTime"));
-					c.setRoomNum(rs.getString("roomNum"));
-					int profId = rs.getInt("profId");
-					sql = "SELECT profId, firstName, lastName FROM Professor WHERE profId="
-							+ rs.getInt("profId");
-					ResultSet profrs = profStatement.executeQuery(sql);
-					while (profrs.next()) {
-						if (profId == profrs.getInt("profId")) {
-							c.setProfName(profrs.getString("firstName") + " "
-									+ profrs.getString("lastName"));
+					while (rs.next()) {
+						Course c = new Course();
+						c.setCourseId(rs.getInt("courseId"));
+						c.setProfId(rs.getInt("profId"));
+						c.setProgId(progId);
+						c.setCourseName(rs.getString("courseName"));
+						c.setCourseCode(rs.getString("courseCode"));
+						c.setCourseTime(rs.getString("courseTime"));
+						c.setRoomNum(rs.getString("roomNum"));
+						int profId = rs.getInt("profId");
+						sql = "SELECT profId, firstName, lastName FROM Professor WHERE profId="
+								+ rs.getInt("profId");
+						ResultSet profrs = profStatement.executeQuery(sql);
+						while (profrs.next()) {
+							if (profId == profrs.getInt("profId")) {
+								c.setProfName(profrs.getString("firstName")
+										+ " " + profrs.getString("lastName"));
+							}
 						}
+
+						courses.add(c);
 					}
 
-					courses.add(c);
+					session.setAttribute("courses", courses);
+
+					statement.close();
+					conn.close();
+
+					// RESTORE DATA THAT MAY HAVE BEEN IN TEXT BOXES
+					Student s = new Student();
+					s.setFirstName(request.getParameter("firstName"));
+					s.setLastName(request.getParameter("lastName"));
+					s.setEmail(request.getParameter("email"));
+					s.setUser(request.getParameter("user"));
+					s.setPass(request.getParameter("pass"));
+					session.setAttribute("prog" + progId, "selected");
+					session.setAttribute("stud", s);
+					// END INPUT RESTORES
+
+					response.sendRedirect("createStud.jsp");
+
+				} catch (SQLException e) {
+					out.print("Program dropbox change - SQL Error -  "
+							+ e.getMessage());
 				}
+				// COMES FROM add_edit_grade.jsp
+			} else if (nameOfForm.equals("gradeForm")) {
+				int courseId = 0;
+				String courseName = request.getParameter("courses");
 
-				session.setAttribute("courses", courses);
+				try {
+					String connectionURL = "jdbc:derby://localhost:1527/student;create=true";
+					Connection conn = null;
+					ResultSet rs;
+					conn = DriverManager.getConnection(connectionURL);
+					Statement statement = conn.createStatement();
 
-				statement.close();
-				conn.close();
+					String sql = "SELECT courseId FROM Course WHERE courseName='"
+							+ courseName + "'";
+					rs = statement.executeQuery(sql);
 
-				// RESTORE DATA THAT MAY HAVE BEEN IN TEXT BOXES
-				Student s = new Student();
-				s.setFirstName(request.getParameter("firstName"));
-				s.setLastName(request.getParameter("lastName"));
-				s.setEmail(request.getParameter("email"));
-				s.setUser(request.getParameter("user"));
-				s.setPass(request.getParameter("pass"));
-				session.setAttribute("prog" + progId, "selected");
-				session.setAttribute("stud", s);
-				// END INPUT RESTORES
+					if (rs.next()) {
+						courseId = rs.getInt("courseId");
 
-				response.sendRedirect("createStud.jsp");
+						ArrayList<Material> mats = new ArrayList<Material>();
+						Student s = (Student) session.getAttribute("student");
 
-			} catch (SQLException e) {
-				out.print("Program dropbox change - SQL Error -  "
-						+ e.getMessage());
+						sql = "SELECT * FROM Material WHERE courseId ="
+								+ courseId;
+
+						rs = statement.executeQuery(sql);
+
+						while (rs.next()) {
+							Material m = new Material();
+
+							m.setMatType(rs.getString("matType"));
+							m.setMatName(rs.getString("matName"));
+							m.setMatWeight(rs.getString("matWeight"));
+							m.setCourseId(courseId);
+							m.setStudId(s.getStudid());
+
+							mats.add(m);
+						}
+
+						session.setAttribute("mats", mats);
+
+						// RESTORE COURSES COMBOBOX
+						// session.setAttribute("courseBox" + courseId,
+						// "selected");
+						// CANT RESTORE COMBO BOX
+
+						response.sendRedirect("add_edit_grade.jsp");
+					} else
+						System.out.println("Failed");
+
+				} catch (SQLException e) {
+					System.out
+							.println("FROM SUBMITTED GRADE FORM - SQL EXCEPTION - "
+									+ e.getMessage());
+				}
 			}
 		}
 
