@@ -41,7 +41,6 @@ public class Regservlet extends HttpServlet {
 			HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
 		PrintWriter out = response.getWriter();
-
 		String courseName = request.getParameter("courseName");
 
 		if (null != courseName) {
@@ -361,7 +360,9 @@ public class Regservlet extends HttpServlet {
 																// button from
 																// Student view
 			// SEND TO add_edit_grade.jsp
+			session.setAttribute("selectedCourse", null);
 			response.sendRedirect("add_edit_grade.jsp");
+
 		} else if (request.getParameter("createStud") != null) {
 			// VALIDATION FOR STUDENT INFO
 			session.setAttribute("errors", null);
@@ -467,9 +468,72 @@ public class Regservlet extends HttpServlet {
 		} else if (request.getParameter("weightPage") != null) {
 			response.sendRedirect("add_edit_weight.jsp");
 
+		} else if (request.getParameter("addWeight") != null) {
+			// Not Working
+			out.println("OUT OF SERVICE");
+		} else if (request.getParameter("btnGrade") != null) {
+			try {
+				String connectionURL = "jdbc:derby://localhost:1527/student;create=true";
+				Connection conn = null;
+				ResultSet rs;
+				conn = DriverManager.getConnection(connectionURL);
+				Statement statement = conn.createStatement();
+
+				int grade = Integer.parseInt(request.getParameter("newGrade"));
+
+				String sql = "SELECT courseId FROM Course WHERE courseName='"
+						+ session.getAttribute("selectedCourse") + "'";
+
+				rs = statement.executeQuery(sql);
+
+				if (rs.next()) {
+					int courseId = rs.getInt("courseId");
+
+					sql = "SELECT matId FROM Material WHERE courseId="
+							+ courseId + " AND matName='"
+							+ request.getParameter("materials") + "'";
+					rs = statement.executeQuery(sql);
+
+					if (rs.next()) {
+						int matId = rs.getInt("matId");
+
+						sql = "UPDATE Material SET grade=" + grade
+								+ " WHERE matId=" + matId;
+						statement.executeUpdate(sql);
+
+						ArrayList<Material> materials = new ArrayList<Material>();
+						// Refreshing the course list
+						sql = "SELECT * FROM Material";
+
+						rs = statement.executeQuery(sql);
+
+						while (rs.next()) {
+							Material m = new Material();
+
+							m.setCourseId(rs.getInt("courseId"));
+							m.setMatId(rs.getInt("matId"));
+							m.setStudId(rs.getInt("studId"));
+							m.setGrade(rs.getString("grade"));
+							m.setMatName(rs.getString("matName"));
+							m.setMatType(rs.getString("matType"));
+							m.setMatWeight(rs.getString("matWeight"));
+
+							materials.add(m);
+						}
+
+						session.setAttribute("materials", materials);
+						response.sendRedirect("stud_view.jsp");
+
+					}
+				}
+			} catch (SQLException e) {
+				System.out.println("btnGrade - SQLEXCEPTION - "
+						+ e.getMessage());
+			}
+
 		} else {
 			// COMES FROM createStud.jsp onchange select tag
-			session.setAttribute("courses", null);
+			// session.setAttribute("courses", null);
 			String nameOfForm = request.getParameter("nameOfForm");
 
 			if (nameOfForm.equals("studForm")) {
@@ -580,6 +644,7 @@ public class Regservlet extends HttpServlet {
 						}
 
 						session.setAttribute("mats", mats);
+						session.setAttribute("selectedCourse", courseName);
 
 						// RESTORE COURSES COMBOBOX
 						// session.setAttribute("courseBox" + courseId,

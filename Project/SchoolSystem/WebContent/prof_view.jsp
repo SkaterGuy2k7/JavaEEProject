@@ -7,10 +7,13 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
 <title>Professor View</title>
 <script>
-	function display(courseId) {		
-		alert("Hello");		
-		document.getElementByName("material").style.display = 'none';
-		document.getElementById(courseId).style.display = 'block';		
+	function display(course) {		
+		//alert(document.getElementById("mat"+course));
+		if(document.getElementById("mat"+course).style.display == 'block'){
+			document.getElementById("mat"+course).style.display = 'none'
+		} else {
+			document.getElementById("mat"+course).style.display = 'block'
+		}		
 	}
 </script>
 </head>
@@ -34,14 +37,14 @@
 		
 		if (null != courseList) {
 			for (Course c : courseList) {				
-				out.println("<div><a href='#' onclick=\"display('"+c.getCourseId()+"')\">"+c.getCourseId()+"</a>&nbsp;");
+				out.println("<div><a href='#' onclick=\"display("+c.getCourseId()+")\">"+c.getCourseCode()+"</a>&nbsp;");
 				out.println(""+c.getCourseName()+"&nbsp;");
 				out.println(""+c.getCourseTime()+"&nbsp;");
 				out.println(""+c.getRoomNum()+"&nbsp;</div>");
 				if (null != matList) {					
 					for (Material m : matList) {
 						if(m.getCourseId() == c.getCourseId()){
-							out.println("<div name=\"material\">Type: "+m.getMatType()+"&nbsp");
+							out.println("<div name=\"material\" id=\"mat"+c.getCourseId()+"\">Type: "+m.getMatType()+"&nbsp");
 							out.println("Weight: "+m.getMatWeight()+"</div>");
 						}						
 					}													
@@ -52,6 +55,16 @@
 		<input type='submit' name="materialPage" value='Add/Edit Material'/>
 		<input type='submit' name="weightPage" value='Add/Edit Weight'/>
 	</form>
+	<script>
+	var mats = document.getElementsByName("material");
+	
+	var length = mats.length;
+
+    for (var i = 0; i < length; i++)
+    {
+        mats[i].style.display='none';
+    }
+    </script>
 </body>
 
 </html>

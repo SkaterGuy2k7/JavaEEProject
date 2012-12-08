@@ -11,25 +11,50 @@
 <u>Add of Edit a Grade</u><br/><br/>
 <form name="gradeForm" action="Regservlet" method="post">
 <input type="hidden" name="nameOfForm" value="gradeForm" />
-		<select name="courses" onchange="document.gradeForm.submit()	">
-		<option>Select a course...</option>
+		
 		<%
 		ArrayList<Course> courses = (ArrayList<Course>) session.getAttribute("courses");
-		if(null != courses)
+		String beenSent = (String)session.getAttribute("selectedCourse");
+		boolean dis = false;
+		
+		out.print("<select name=\"courses\" onchange=\"document.gradeForm.submit()	\"");
+		
+		if(null == beenSent)
 		{
-			int i = 1;
-			for(Course c: courses)
+			out.print("><option>Select a course...</option>");
+			if(null != courses)
 			{
-				out.println("<option>"+c.getCourseName()+"</option>");
-				i++;
+				for(Course c: courses)
+				{
+					out.println("<option>"+c.getCourseName()+"</option>");
+				}
+				out.println("</select>");
+			}
+		}else{
+			out.println("disabled >");
+			out.println("<option>"+beenSent+"</option></select><br/>");
+			ArrayList<Material> mats = (ArrayList<Material>) session.getAttribute("mats");
+			
+			if(null != mats)
+			{
+				
+				if(mats.size() != 0){
+				out.println("<select name=\"materials\">");
+				
+					for(Material m : mats)
+					{
+						out.println("<option>"+m.getMatName()+"</option>"); 
+					}
+					out.println("</select><br/>");
+					out.println("Enter grade:<input type='text' name='newGrade' /><br/>");
+					out.println("<input type='submit' name='btnGrade' />");
+				}
+				else{
+					out.println("No material for this course");
+				}
 			}
 		}
-		out.println("</select><br/>");
 		%>
-</select>
-<select name="materials" onchange="">
-		
-</select>
 </form>
 </body>
 </html>
