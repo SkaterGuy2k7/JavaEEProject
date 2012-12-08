@@ -8,8 +8,7 @@
 <title>Add/Edit Material</title>
 </head>
 <body>
-	<form name="matForm" action="Regservlet" method="post">
-	<input type="hidden" name="nameOfForm" value="matForm" />
+	<form action="Regservlet" method="post">
 		<table>
 			<tr>
 			<th>Courses</th>
@@ -17,7 +16,7 @@
 			<tr>
 				<td>Course Name: </td>
 				<td>
-					<select name="courseList" onchange="document.matForm.submit()">
+					<select name="courseList">
 						<% 
 						ArrayList<Course> courseList = (ArrayList<Course>) session.getAttribute("courses");							
 						
@@ -50,6 +49,5 @@
 		</table>
 		<input type="submit" name="addMaterial" value="Add/Edit Material"/>
 	</form>
-
 </body>
 </html>

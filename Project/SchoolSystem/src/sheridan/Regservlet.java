@@ -42,6 +42,47 @@ public class Regservlet extends HttpServlet {
 		HttpSession session = request.getSession();
 		PrintWriter out = response.getWriter();
 
+		String courseName = request.getParameter("courseName");
+
+		if (null != courseName) {
+			try {
+				String connectionURL = "jdbc:derby://localhost:1527/student;create=true";
+				Connection conn = null;
+				ResultSet rs;
+				conn = DriverManager.getConnection(connectionURL);
+				Statement statement = conn.createStatement();
+				ArrayList<Material> materials = new ArrayList<Material>();
+
+				String sql = "SELECT courseId FROM Course WHERE courseName='"
+						+ courseName + "'";
+				rs = statement.executeQuery(sql);
+				rs.next();
+
+				String courseId = rs.getString("courseId");
+
+				sql = "SELECT * FROM Material WHERE courseId=" + courseId + "";
+				rs = statement.executeQuery(sql);
+
+				while (rs.next()) {
+					Material m = new Material();
+
+					m.setCourseId(rs.getInt("courseId"));
+					m.setMatId(rs.getInt("matId"));
+					m.setStudId(rs.getInt("studId"));
+					m.setGrade(rs.getString("grade"));
+					m.setMatName(rs.getString("matName"));
+					m.setMatType(rs.getString("matType"));
+					m.setMatWeight(rs.getString("matWeight"));
+
+					materials.add(m);
+				}
+				session.setAttribute("materials", materials);
+				response.sendRedirect("add_edit_weight.jsp");
+			} catch (SQLException e) {
+				System.out.print(e.getMessage());
+			}
+		}
+
 	}
 
 	/**
@@ -233,7 +274,92 @@ public class Regservlet extends HttpServlet {
 			System.out.println("Course: " + courseName);
 			response.sendRedirect("add_edit_material.jsp");
 
-		} else if (request.getParameter("addGrade") != null) {
+		} else if (request.getParameter("addMaterial") != null) {
+			String matName = "";
+			String matWeight = "";
+			HashMap<String, String> errors = new HashMap<String, String>();
+
+			if (request.getParameter("newName").equals(""))
+				errors.put("errors", "Please enter in a Material Name");
+			else
+				matName = request.getParameter("newName");
+
+			if (request.getParameter("newWeight").equals(""))
+				errors.put("errors", "Please enter in a Material Weight");
+			else
+				matWeight = request.getParameter("newWeight");
+
+			String courseName = request.getParameter("courseList");
+			String matType = request.getParameter("newType");
+
+			try {
+				String connectionURL = "jdbc:derby://localhost:1527/student;create=true";
+				Connection conn = null;
+				ResultSet rs;
+				conn = DriverManager.getConnection(connectionURL);
+				Statement statement = conn.createStatement();
+
+				String sql = "SELECT courseId FROM Course WHERE courseName='"
+						+ courseName + "'";
+
+				rs = statement.executeQuery(sql);
+				rs.next();
+
+				String courseId = rs.getString("courseId");
+
+				sql = "SELECT s.studid FROM Student s, Program p, Course c WHERE s.progId=p.progId AND p.progId=c.progId AND c.courseId="
+						+ courseId + "";
+
+				rs = statement.executeQuery(sql);
+				rs.next();
+				String studId = rs.getString("studId");
+
+				sql = "INSERT INTO Material(studId,courseId,matWeight,matName,matType) VALUES("
+						+ ""
+						+ studId
+						+ ","
+						+ ""
+						+ courseId
+						+ ","
+						+ "'"
+						+ matWeight
+						+ "',"
+						+ "'"
+						+ matName
+						+ "',"
+						+ "'"
+						+ matType + "')";
+
+				statement.executeUpdate(sql);
+
+				ArrayList<Material> materials = new ArrayList<Material>();
+				// Refreshing the course list
+				sql = "SELECT * FROM Material";
+
+				rs = statement.executeQuery(sql);
+
+				while (rs.next()) {
+					Material m = new Material();
+
+					m.setCourseId(rs.getInt("courseId"));
+					m.setMatId(rs.getInt("matId"));
+					m.setStudId(rs.getInt("studId"));
+					m.setGrade(rs.getString("grade"));
+					m.setMatName(rs.getString("matName"));
+					m.setMatType(rs.getString("matType"));
+					m.setMatWeight(rs.getString("matWeight"));
+
+					materials.add(m);
+				}
+				session.setAttribute("materials", materials);
+				response.sendRedirect("prof_view.jsp");
+			} catch (SQLException e) {
+				System.out.print(e.getMessage());
+			}
+
+		} else if (request.getParameter("addGrade") != null) { // addGrade is a
+																// button from
+																// Student view
 			// SEND TO add_edit_grade.jsp
 			response.sendRedirect("add_edit_grade.jsp");
 		} else if (request.getParameter("createStud") != null) {
@@ -337,6 +463,9 @@ public class Regservlet extends HttpServlet {
 						.println("ADDING NEW STUDENT TO DATABASE - SQLEXCEPTION - "
 								+ e.getMessage());
 			}
+
+		} else if (request.getParameter("weightPage") != null) {
+			response.sendRedirect("add_edit_weight.jsp");
 
 		} else {
 			// COMES FROM createStud.jsp onchange select tag

@@ -7,6 +7,12 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
 <title>Add/Edit Weight</title>
 </head>
+<script>
+	function fillMats(){		
+		var course = document.getElementById("coursesList").value;
+		document.location.href="http://localhost:8080/SchoolSystem/Regservlet?courseName="+course+"";
+	}
+</script>
 <body>
 	<form action="Regservlet" method="post">
 		<table>
@@ -15,11 +21,35 @@
 			</tr>
 			<tr>
 				<td>Course Name: </td>
-				<td>${material.courseName }</td>
+				<td>				
+					<select id="coursesList" name="courses" onchange="fillMats()">
+							<% 
+							ArrayList<Course> courseList = (ArrayList<Course>) session.getAttribute("courses");						
+							
+							if (null != courseList) {
+								for (Course c : courseList) {				
+									out.println("<option name=\" "+c.getCourseCode()+" \">"+c.getCourseName()+"</option>");								
+								}
+							}
+							%>
+					</select>
+				</td>
 			</tr>
 			<tr>
-				<td>Material Type: </td>
-				<td>${material.type }</td>
+				<td>Material: </td>
+				<td>
+					<select id="matList" name="courses">
+							<% 
+							ArrayList<Material> matList = (ArrayList<Material>) session.getAttribute("materials");						
+							
+							if (null != matList) {
+								for (Material m : matList) {				
+									out.println("<option name=\" "+m.getMatId()+" \">"+m.getMatName()+"</option>");								
+								}
+							}
+							%>
+					</select>
+				</td>
 			</tr>
 			<tr>
 				<td>Material Weight: </td>

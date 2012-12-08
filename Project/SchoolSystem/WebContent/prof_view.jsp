@@ -27,9 +27,8 @@
 			<th>Room Number</th>
 		</tr>
 	</table>
-	<div value=""></div>	
 	<form action="Regservlet" method="post">
-	<%
+	<%		
 		ArrayList<Course> courseList = (ArrayList<Course>) session.getAttribute("courses");
 		ArrayList<Material> matList = (ArrayList<Material>) session.getAttribute("materials");		
 		
@@ -41,16 +40,17 @@
 				out.println(""+c.getRoomNum()+"&nbsp;</div>");
 				if (null != matList) {					
 					for (Material m : matList) {
-						out.println("<div name=\"material\">Type: "+m.getMatType()+"&nbsp");
-						out.println("Weight: "+m.getMatWeight()+"</div>");
-						out.println("<input type='hidden' name='matCourseName' value='"+c.getCourseName()+"'/>");						
-					}
-					out.println("<input type='submit' name='materialPage' value='Add/Edit Material'/>");
-					out.println("<input type='submit' name='addWeight' value='Add/Edit Weight'/>");
+						if(m.getCourseId() == c.getCourseId()){
+							out.println("<div name=\"material\">Type: "+m.getMatType()+"&nbsp");
+							out.println("Weight: "+m.getMatWeight()+"</div>");
+						}						
+					}													
 				}				
 			}
 		}
-	%>		
+	%>				
+		<input type='submit' name="materialPage" value='Add/Edit Material'/>
+		<input type='submit' name="weightPage" value='Add/Edit Weight'/>
 	</form>
 </body>
 
