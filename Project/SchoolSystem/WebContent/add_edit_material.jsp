@@ -8,14 +8,27 @@
 <title>Add/Edit Material</title>
 </head>
 <body>
-	<form action="Regservlet" method="post">
+	<form name="matForm" action="Regservlet" method="post">
+	<input type="hidden" name="nameOfForm" value="matForm" />
 		<table>
 			<tr>
 			<th>Courses</th>
 			</tr>
 			<tr>
 				<td>Course Name: </td>
-				<td>${course.name }</td>
+				<td>
+					<select name="courseList" onchange="document.matForm.submit()">
+						<% 
+						ArrayList<Course> courseList = (ArrayList<Course>) session.getAttribute("courses");							
+						
+						if (null != courseList) {
+							for (Course c : courseList) {				
+								out.println("<option name=\" "+c.getCourseCode()+" \">"+c.getCourseName()+"</option>");								
+							}
+						}
+						%>
+					</select>
+				</td>
 			</tr>
 			<tr>
 				<td>Material Name: </td>
@@ -23,7 +36,12 @@
 			</tr>
 			<tr>
 				<td>Material Type: </td>
-				<td><input type="text" name="newType"/></td>
+				<td>
+					<select name="newType">
+						<option name="assignType">Assignment</option>
+						<option name="testType">Test</option>
+					</select>
+				</td>
 			</tr>
 			<tr>
 				<td>Material Weight: </td>
@@ -32,5 +50,6 @@
 		</table>
 		<input type="submit" name="addMaterial" value="Add/Edit Material"/>
 	</form>
+
 </body>
 </html>
