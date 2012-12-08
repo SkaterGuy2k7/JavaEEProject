@@ -1,0 +1,13 @@
+INSERT INTO Professor (firstName, lastName, email, username, password) VALUES ('Simon', 'Hood', 'simon.hood@sheridanc.on.ca', 'Simon', 'pass');
+
+INSERT INTO Program (progName) VALUES ('Animal Care');
+
+INSERT INTO Course (profId, progId, courseName, courseCode, courseTime, roomNum) VALUES (1, 1, 'Animal Nursing Fundamentals', 'NURS13796', '', '');
+
+INSERT INTO Course (profId, progId, courseName, courseCode, courseTime, roomNum) VALUES (1, 1, 'Domestic Animal Science', 'SCIE13636', '', '');
+
+INSERT INTO Course (profId, progId, courseName, courseCode, courseTime, roomNum) VALUES (1, 1, 'Animal Facility Management', 'SCIE18634', '', '');
+
+INSERT INTO Course (profId, progId, courseName, courseCode, courseTime, roomNum) VALUES (1, 1, 'Animal Grooming', 'SCIE13796', '', '');
+
+INSERT INTO Course (profId, progId, courseName, courseCode, courseTime, roomNum) VALUES (1, 1, 'Animal Centre Duty', 'SCIE18263', '', '');
