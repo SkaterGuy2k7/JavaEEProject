@@ -32,7 +32,7 @@
 			</tr>
 			<tr>
 				<td>Material Name: </td>
-				<td><input type="text" name="newName"/></td>
+				<td><input type="text" name="newName"/></td><span class="error">${errors.newNameError}</span>
 			</tr>
 			<tr>
 				<td>Material Type: </td>
@@ -45,7 +45,7 @@
 			</tr>
 			<tr>
 				<td>Material Weight: </td>
-				<td><input type="text" name="newWeight"/></td>
+				<td><input type="text" name="newWeight"/></td><span class="error">${errors.newWeightError}</span>
 			</tr>
 		</table>
 		<input type="submit" name="addMaterial" value="Add/Edit Material"/>
